@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Python parser</title>
+    <meta name="page" content="width+device-width, initial-scale=1">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+{#    <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">#}
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  </head>
+  <body>
+
+    <nav class="navbar navbar-default">
+          <form class="navbar-form navbar-left" method="GET">
+            <div class="form-group">
+                <select class="form-control" name="select">
+                    <option value="artist">Artist</option>
+                    <option value="track_title">Track title</option>
+                    <option value="set_title">Set title</option>
+                </select>
+              <input type="text" class="form-control" placeholder="Search" name="search" value="{{ request.args.get('search', '')}}">
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+          </form>
+
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+
+
+         tracks:{% for item in mst %} <br>
+                 id: {{ item.id }} <br>
+                track: {{ item.artist }} --
+                 {{ item.title }} <br>
+                set_id: {{ item.set_id }} <br>
+            {% endfor %}
+
+  </body>
+</html>

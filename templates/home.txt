@@ -1,0 +1,6 @@
+{% for item in mst %}
+    id: {{ item.id }}
+    title: {{ item.set_title }}
+    link: {{ item.set_link }}
+    tracks: {{ item.set_tracks }}
+{% endfor %}

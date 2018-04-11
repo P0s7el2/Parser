@@ -1,45 +1,34 @@
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import ForeignKey
-from sqlalchemy.orm import relationship
-from sqlalchemy import Column, Integer, String
+from parser_flask_api import db
 
 
-Base = declarative_base()
-
-
-# orm-классы
-class Track(Base):
-    __tablename__ = 'tracks'
-    id = Column(Integer, primary_key=True)
-    artist = Column(String)
-    title = Column(String)
-    set_id = Column(String, ForeignKey("musicsets.id"))
-    musicset = relationship("Musicset", backref='tracks')
-
-    def __init__(self, artist, title, set_id):
-        self.artist = artist
-        self.title = title
-        self.set_id = set_id
-
-    def __repr__(self):
-        return "<Track(artist: '%s', title: '%s', set_id: '%s'>" % (self.artist, self.title, self.set_id)
-
-
-class Musicset(Base):
+class Musicset(db.Model):
     __tablename__ = 'musicsets'
-    id = Column(Integer, primary_key=True)
-    set_title = Column(String)
-    set_link = Column(String)
-    set_tracks = Column(String)
+    id = db.Column(db.Integer, primary_key=True)
+    set_title = db.Column(db.String)
+    set_link = db.Column(db.String)
+    set_tracks = db.Column(db.String)
 
-    def __str__(self):
-        return "<Set id - %s>" % self.id
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'set_title:': self.set_title,
+            'link:': self.set_link,
+            'set_tracks:': self.set_tracks
+        }
 
-    def __init__(self, id, set_tracks, set_link, set_title):
-        self.id = id
-        self.set_title = set_title
-        self.set_link = set_link
-        self.set_tracks = set_tracks
 
-    def __repr__(self):
-        return "<Track(id: '%s', set_title: '%s', link: '%s', set_tracks: '%s'>" % (self.id, self.set_title, self.link, self.set_tracks)
+class Track(db.Model):
+    __tablename__ = 'tracks'
+    id = db.Column(db.Integer, primary_key=True)
+    artist = db.Column(db.String)
+    title = db.Column(db.String)
+    set_id = db.Column(db.String, db.ForeignKey("musicsets.id"))
+    musicset = db.relationship(Musicset, backref='tracks')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'artist:': self.artist,
+            'title:': self.title,
+            'set_id:': self.set_id
+        }
