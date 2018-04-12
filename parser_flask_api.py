@@ -18,7 +18,7 @@ def index():
     from models import Musicset, Track
     search = request.args.get('search')
     select = request.args.get('select')
-
+    track_session = db.session.query(Track)
     if search:
         if select == 'artist':
             result = Track.query.filter(Track.artist.ilike('%{0}%'.format(search)))
@@ -30,91 +30,23 @@ def index():
             for item in mst:
                 id = str(item.id)
                 result.extend(Track.query.filter_by(set_id=id))
+        elif select == '-':
+            d = track_session.filter(Track.artist.ilike('%{0}%'.format(search)) | Track.title.ilike('%{0}%'.format(search)))
+            d.delete(synchronize_session=False)
+            db.session.commit()
+            result = Track.query.all()
+        elif select == 'plus':
+            d = track_session.filter(Track.artist.ilike('%{0}%'.format(search)) | Track.title.ilike('%{0}%'.format(search)))
+            track_session.delete()
+            db.session.add_all(d)
+            db.session.commit()
+            result = d
     else:
         # достаем ве записи
         result = Track.query.all()
-    # if request.method == 'POST':
-    #     pass
-    # if request.method == 'GET':
-    #     pass
 
     # возвращаем темплейт чтобы вывести заиси
     return render_template('start.html', mst=result)
-    # return jsonify([p.to_dict() for p in track])
-
-
-# роут для вывода, на вход /поле_для_поиска/значение
-@app.route('/musicset/<path:val>', methods=['GET', 'POST'])
-def musicset_search(val):
-    # импортируем модель
-    from models import Musicset
-    if request.method == 'POST':
-        pass
-    if request.method == 'GET':
-        # режем поле по '/' первое значение поле, второе значение
-        vals_to_search = val.split('/', maxsplit=1)
-        # выбор поля по которому будет идти фильтрация, фильтрация + минимальные проверки
-        if len(vals_to_search) != 2:
-            return 'entered not true value'
-        elif vals_to_search[0] == 'id':
-            result = Musicset.query.filter_by(id=vals_to_search[1])
-        elif vals_to_search[0] == 'set_title':
-            result = Musicset.query.filter_by(set_title=vals_to_search[1])
-        elif vals_to_search[0] == 'set_link':
-            result = Musicset.query.filter_by(set_link=vals_to_search[1])
-        elif vals_to_search[0] == 'set_tracks':
-            result = Musicset.query.filter_by(set_tracks=vals_to_search[1])
-        elif vals_to_search[0]:
-            return 'check fields that you entered'
-        # шаблон для вывода массива записей
-        result_form = Template("""
-        Musicset:{% for item in array %} <br>
-                id: {{ item.id }} <br>
-                title: {{ item.set_title }} <br>
-                link: {{ item.set_link }} <br>
-                tracks: {{ item.set_tracks }} <br>
-            {% endfor %}
-        """
-                               )
-    # возвращение шаблона записей
-    return result_form.render(array=result)
-
-
-# роут для вывода, на вход /поле_для_поиска/значение
-@app.route('/tracks/<path:val>', methods=['GET', 'POST'])
-def tracks_search(val):
-    # импортируем модель
-    from models import Track
-    if request.method == 'POST':
-        pass
-    if request.method == 'GET':
-        # режем поле по '/' первое значение поле, второе значение
-        vals_to_search = val.split('/', maxsplit=1)
-        # выбор поля по которому будет идти фильтрация, фильтрация + минимальные проверки
-        if len(vals_to_search) != 2:
-            return 'entered not true value'
-        elif vals_to_search[0] == 'id':
-            result = Track.query.filter_by(id=vals_to_search[1])
-        elif vals_to_search[0] == 'artist':
-            result = Track.query.filter_by(artist=vals_to_search[1])
-        elif vals_to_search[0] == 'title':
-            result = Track.query.filter_by(title=vals_to_search[1])
-        elif vals_to_search[0] == 'set_id':
-            result = Track.query.filter_by(set_id=vals_to_search[1])
-        elif vals_to_search[0]:
-            return 'check fields that you entered'
-        # шаблон для вывода массива записей
-        result_form = Template("""
-        Musicset:{% for item in array %} <br>
-                id: {{ item.id }} <br>
-                track: {{ item.artist }} --
-                 {{ item.title }} <br>
-                set_id: {{ item.set_id }} <br>
-            {% endfor %}
-        """
-                               )
-    # возвращение шаблона записей
-    return result_form.render(array=result)
 
 
 if __name__ == '__main__':
