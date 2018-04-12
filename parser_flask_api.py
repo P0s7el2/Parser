@@ -21,17 +21,17 @@ def index():
 
     if search:
         if select == 'artist':
-            result = Track.query.filter_by(artist=search)
+            result = Track.query.filter(Track.artist.ilike('%{0}%'.format(search)))
         elif select == 'track_title':
-            result = Track.query.filter_by(title=search)
+            result = Track.query.filter(Track.title.ilike('%{0}%'.format(search)))
         elif select == 'set_title':
-            mst = Musicset.query.filter_by(set_title=search)
-
+            mst = Musicset.query.filter(Musicset.set_title.ilike('%{0}%'.format(search)))
+            result = []
             for item in mst:
                 # скорее всего буедт баг, и надо почекать будет
                 # ибо после каждой итерации result будет перезаписываться
                 id = str(item.id)
-                result = Track.query.filter_by(set_id=id)
+                result.extend(Track.query.filter_by(set_id=id))
     else:
         # достаем ве записи
         result = Track.query.all()

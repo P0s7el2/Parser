@@ -5,38 +5,52 @@
     <title>Python parser</title>
     <meta name="page" content="width+device-width, initial-scale=1">
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+      <script src="{{ url_for('static', filename='js/bootstrap.min.js')}}" ></script>
 
-{#    <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">#}
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
+{#      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">#}
 
   </head>
   <body>
+    <header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <div class="collapse navbar-collapse">
+          <form class="form-inline mt-2 mt-md-0" method="GET">
 
-    <nav class="navbar navbar-default">
-          <form class="navbar-form navbar-left" method="GET">
-            <div class="form-group">
-                <select class="form-control" name="select">
+                <select class="form-control mr-sm-2" name="select">
                     <option value="artist">Artist</option>
                     <option value="track_title">Track title</option>
                     <option value="set_title">Set title</option>
                 </select>
-              <input type="text" class="form-control" placeholder="Search" name="search" value="{{ request.args.get('search', '')}}">
-            </div>
-            <button type="submit" class="btn btn-default">Submit</button>
+              <input type="text" class="form-control mr-sm-2" placeholder="Search" name="search" value="{{ request.args.get('search', '')}}">
+
+            <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Submit</button>
           </form>
 
         </div><!-- /.navbar-collapse -->
-      </div><!-- /.container-fluid -->
     </nav>
-
-
-         tracks:{% for item in mst %} <br>
-                 id: {{ item.id }} <br>
-                track: {{ item.artist }} --
-                 {{ item.title }} <br>
-                set_id: {{ item.set_id }} <br>
-            {% endfor %}
-
+    </header>
+    <main role="main" class="container" style="padding: 60px 15px 0;">
+        <table class="table">
+            <thead>
+                <tr>
+                  <th>id</th>
+                  <th>artist</th>
+                  <th>title</th>
+                  <th>set id</th>
+                </tr>
+            </thead>
+             <tbody>
+                {% for item in mst %}
+                    <tr>
+                        <th scope="row"> {{ item.id }} </th>
+                        <td>{{ item.artist }} </td>
+                        <td>{{ item.title }} </td>
+                        <td>{{ item.set_id }} </td>
+                    </tr>
+                {% endfor %}
+             </tbody>
+        </table>
+    </main>
   </body>
 </html>
