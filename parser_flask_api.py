@@ -28,8 +28,6 @@ def index():
             mst = Musicset.query.filter(Musicset.set_title.ilike('%{0}%'.format(search)))
             result = []
             for item in mst:
-                # скорее всего буедт баг, и надо почекать будет
-                # ибо после каждой итерации result будет перезаписываться
                 id = str(item.id)
                 result.extend(Track.query.filter_by(set_id=id))
     else:
