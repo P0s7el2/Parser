@@ -17,12 +17,14 @@ class Musicset(db.Model):
         }
 
 
+
 class Track(db.Model):
     __tablename__ = 'tracks'
     id = db.Column(db.Integer, primary_key=True)
     artist = db.Column(db.String)
     title = db.Column(db.String)
     set_id = db.Column(db.String, db.ForeignKey("musicsets.id"))
+
     musicset = db.relationship(Musicset, backref='tracks')
 
     def to_dict(self):
